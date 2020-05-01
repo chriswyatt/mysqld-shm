@@ -6,8 +6,9 @@
             "command": "nim",
             "args": [
                 "c",
-                "--threads:on",
                 "-o:bin/mysqld_shm",
+                // "-d:release",
+                "--threads:on",
                 "src/mysqld_shm.nim",
             ],
             "options": {
