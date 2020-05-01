@@ -1,13 +1,18 @@
 import os
 import osproc
+import strformat
 import strutils
 import threadpool
 
 const mysqlVarPath = "/dev/shm/mysql_var"
+const mysqlUserName = "mysql"
+const chownCmd = fmt"chown {mysqlUserName}:{mysqlUserName} " & mysqlVarPath
 
-const chownCmd = "chown mysql:mysql " & mysqlVarPath
-
-const runuserParams = @["-u", "mysql", "-g", "mysql", "mysqld"]
+const runuserParams = @[
+    "-u", mysql_user_name,
+    "-g", mysql_user_name,
+    "mysqld",
+]
 
 const initCmd = join(
     [
