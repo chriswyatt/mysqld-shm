@@ -4,36 +4,33 @@ import strformat
 import strutils
 import threadpool
 
-const mysqlVarPath = "/dev/shm/mysql_var"
-const mysqlUserName = "mysql"
-const chownCmd = fmt"chown {mysqlUserName}:{mysqlUserName} " & mysqlVarPath
-
-const runuserParams = @[
-    "-u", mysql_user_name,
-    "-g", mysql_user_name,
-    "mysqld",
-]
+const dbPath = "/dev/shm/mysql_var"
+const sysUserName = "mysql"
+const chownCmd = fmt"chown {sysUserName}:{sysUserName} " & dbPath
+const runuserParams = ["-u", sysUserName, "-g", sysUserName, "mysqld"]
+const appUserName = "'portal_app'@'localhost'"
+const appUserPass = "'portal_app'"
 
 const initCmd = join(
     [
         "mariadb-install-db",
-        "--user=mysql",
+        "--user=" & sysUserName,
         "--basedir=/usr",
-        "--datadir=" & mysqlVarPath,
+        "--datadir=" & dbPath,
     ],
     " ",
 )
 
 const sql = join(
     [
-        "CREATE USER 'portal_app'@'localhost' IDENTIFIED BY 'portal_app'",
-        "GRANT ALL PRIVILEGES ON *.* TO 'portal_app'@'localhost'",
+        fmt"CREATE USER {appUserName} IDENTIFIED BY {appUserPass}",
+        fmt"GRANT ALL PRIVILEGES ON *.* TO {appUserName}",
         "FLUSH PRIVILEGES",
     ],
     "; ",
 )
 
-if existsOrCreateDir(mysql_var_path):
+if existsOrCreateDir(dbPath):
     quit(QuitSuccess)
 
 block:
@@ -48,7 +45,7 @@ block:
 
 let mysqldFlowVar = spawn execProcess(
     "runuser",
-    args = runuserParams & commandLineParams(),
+    args = @runuserParams & commandLineParams(),
     options = {poEchoCmd, poStdErrToStdOut, poUsePath},
 )
 
