@@ -47,8 +47,8 @@ let mysqldFlowVar = spawn execProcess(
     options = {poEchoCmd, poStdErrToStdOut, poUsePath},
 )
 
-for i in 0..9:
-    sleep(1000)
+for i in 0..39:
+    sleep(250)
     if execCmd("mysqladmin ping") == 0:
         break
 
