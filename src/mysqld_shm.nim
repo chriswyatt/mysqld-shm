@@ -57,18 +57,16 @@ for i in 0..<40:
     if execCmd("mysqladmin ping") == 0:
         break
 
-block:
-    let output = execProcess(
-        "mysql",
-        args = ["-u", "root", "--execute=" & sql],
-        options = {poEchoCmd, poStdErrToStdOut, poUsePath},
-    )
-    echo output
+echo execProcess(
+    "mysql",
+    args = ["-u", "root", "--execute=" & sql],
+    options = {poEchoCmd, poStdErrToStdOut, poUsePath},
+)
 
 block:
     let exitCode = execCmd("mysqladmin shutdown")
     if exitCode != 0:
-        quit(QuitFailure)
+        quit(exitCode)
 
 sync()
 let mysqldOutput = ^mysqldFlowVar
