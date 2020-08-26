@@ -8,8 +8,8 @@ const dbPath = "/dev/shm/mysql_var"
 const sysUserName = "mysql"
 const chownCmd = fmt"chown {sysUserName}:{sysUserName} " & dbPath
 const runuserParams = ["-u", sysUserName, "-g", sysUserName, "mysqld"]
-const appUserName = "'portal_app'@'localhost'"
-const appUserPass = "'portal_app'"
+const appUserName = "'example_user'@'localhost'"
+const appUserPass = "'example_pass'"
 
 const initCmd = join(
     [
